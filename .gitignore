@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Virtual environments
+.venv/
+venv/
+
+# Environment variables and secrets
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large datasets
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+*.bam
+*.cram
+*.sam
+*.vcf
+*.vcf.gz
+*.bed
+*.bigWig
+*.bw
+*.h5
+*.h5ad
+*.parquet
+*.feather
+*.pkl
+*.pickle
+
+# Large compressed archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+# Project data (reproducible from raw downloads + code)
+data/
+!data/README.md
+
+# Generated figures
+results/**/figures/
+
+# Windows download artifacts
+*.Zone.Identifier
