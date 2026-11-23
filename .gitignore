@@ -43,7 +43,7 @@ Thumbs.db
 *.tar.gz
 *.tgz
 # Project data (reproducible from raw downloads + code)
-data/
+data/*
 !data/README.md
 
 # Generated figures
