@@ -1,0 +1,42 @@
+# Per-dataset configuration for GSE114273 (siPARP1 / siPARP2 knockdown).
+# Sequences are RNA 5'->3'. Guide strands, seeds and target sites are NOT stored
+# here: they are derived from `sense` by code, so there is one source of truth.
+
+dataset_id: GSE114273
+control: siNC
+n_replicates: 2
+
+sirnas:
+  siPARP1-A:
+    intended_target: PARP1
+    sense_deposited: CCAUUGAGCACUUCAUGAA
+    sense: CCAUUGAGCACUUCAUGAA
+  siPARP1-B:
+    intended_target: PARP1
+    sense_deposited: GAUUUCAUCUGGUGUGAUA
+    sense: GAUUUCAUCUGGUGUGAAU
+    correction_note: >-
+      Deposited sequence (as recorded in GTO) occurs in no human ORF or 3'UTR.
+      Swapping the last two nt (GAUA -> GAAU) gives a 19/19 match to PARP1
+      NM_001618.4 mRNA 3086-3104 (CDS 165..3209 -> CDS pos 2922), which is the
+      same site as TargetScan ORF ENST00000366794.5 at 0-based index 2921; it is
+      the only NCBI BLAST match. Treated as a transposition typo. GEO deposit not
+      yet checked.
+  siPARP2-A:
+    intended_target: PARP2
+    sense_deposited: GAAGAAAUUCCUUGACAAA
+    sense: GAAGAAAUUCCUUGACAAA
+  siPARP2-B:
+    intended_target: PARP2
+    sense_deposited: AAGUACUAUCUGAUUCAGCUA
+    sense: AAGUACUAUCUGAUUCAGCUA
+    note: 21 nt with leading AA (older AA + 19 nt convention); matches PARP2 ORF as 21 nt and as 19 nt.
+
+strand_verification:
+  reference: TargetScan ORF_Sequences.txt, human (taxon 9606), gaps stripped, uppercased
+  reference_version: TODO  # file dated 2015-11-24; confirm TargetScan release
+  result: >-
+    For all four siRNAs (siPARP1-B corrected) the sense strand occurs only in
+    its intended target's ORF and the guide strand (reverse complement) occurs
+    in no human ORF. Guide = reverse complement of sense is consistent with the
+    data; which strand RISC actually loads cannot be established from sequence.
