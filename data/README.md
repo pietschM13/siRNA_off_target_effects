@@ -59,12 +59,14 @@ annotation were protein-coding rather than non-coding or another biotype. Not us
 ### raw/
 | File | Notes |
 |---|---|
-| `GSE114273_raw_counts_GRCh38.p13_NCBI.tsv.gz` | GEO NCBI-generated raw counts (GRCh38.p13). Use for DE. |
+| `GSE114273_raw_counts_GRCh38.p13_NCBI.tsv.gz` | GEO NCBI-generated raw counts (GRCh38.p13). 18 samples: siRNA arm GSM3138707–16 (used) plus PARP-inhibitor arm GSM3138699–706 (not used). Use for DE. |
 | `GSE114273_norm_counts_TPM_GRCh38.p13_NCBI.tsv.gz` | GEO NCBI-generated TPM. Descriptive use only. |
 | `Human.GRCh38.p13.annot.tsv` | NCBI gene annotation accompanying the GEO counts (GeneID, Symbol, EnsemblGeneID, GeneType, …). |
+| `All_genes_GSE114273.csv` | GTO GTD0019 "All genes" table (downloaded 2026-11-24). 13,677 genes. **siPARP1-A + B pooled** (GSM3138709–12) vs siNC (GSM3138707–08). Gene symbols only; values rounded to 3 decimals; DE method and gene filter not documented by GTO. Not used for the main analysis (pooling dilutes each seed); kept for a later cross-check notebook. |
+| `Differential_genes_GSE114273.csv` | GTO GTD0019 "Differential genes": the 998 genes of the table above with padj < 0.05 (no log2FC cut-off). Never use for a CDF (pre-selected on significance). |
 
-### processed/: seed annotation (NB3, 2026-11-23)
-Made by `notebooks/GSE114273/03_sequence_analysis.ipynb` with the functions in
+### processed/: seed annotation (2026-11-23)
+Made by `notebooks/GSE114273/02_sequence_analysis.ipynb` with the functions in
 `src/offtarget/sequences.py`. Built from all human 3'UTRs, **not** filtered to expressed
 genes: seed status depends only on the siRNAs and the UTRs, so the gene population
 (expression filter) is applied later, when joining to the DESeq2 results.
@@ -80,6 +82,33 @@ genes: seed status depends only on the siRNAs and the UTRs, so the gene populati
   `_6mer_present` includes every gene with any site. `_best_site` is the single most
   stringent site (8mer > 7mer_m8 > 7mer_A1 > 6mer > none).
 - Genes with an 8mer: siPARP1-A 1,292; siPARP1-B 1,091; siPARP2-A 1,088; siPARP2-B 690.
+
+### processed/: differential expression (2026-11-24)
+Made by `notebooks/GSE114273/03_differential_expression.ipynb`.
+
+| File | Contents |
+|---|---|
+| `GSE114273_<siRNA>_DGE_results.tsv` (×4) | 19,227 protein-coding genes × 6, index `EnsemblGeneID`: `baseMean`, `log2FoldChange`, `lfcSE`, `stat`, `pvalue`, `padj`. log2FC = siRNA / siNC (negative = lower after treatment). Load with `index_col=0`. |
+| `GSE114273_on_target_DGE.tsv` | PARP1 and PARP2 rows from each contrast, with % remaining expression. |
+
+- **Input:** GEO raw counts, the 10 siRNA samples, restricted to protein-coding genes with an
+  Ensembl ID via `GSE114273_gene_mapping_protein_coding.tsv` (from NB 01).
+- **Method:** PyDESeq2 0.5.4, design `~ condition`, siNC as reference. **One fit on all
+  10 samples**, so dispersions are estimated across all 5 groups (more stable at n = 2).
+  Then one Wald test per siRNA vs siNC. No LFC shrinkage. Cook's outlier refitting is on,
+  but inactive with n = 2.
+- **Why `~ condition` and not `~ replicate + condition`:** no evidence of paired replicates
+  in GEO metadata or in the data (residual-correlation check). See
+  `docs/methodology.md`, "Replicates and batch effects".
+- **Sample QC:** replicates r = 0.996–0.998; each siRNA forms its own PCA cluster. See
+  `docs/methodology.md`, "Sample QC: reading a PCA".
+- **Gene counts:** 1,987 genes have zero reads in all samples (log2FC = NaN). The remaining
+  17,240 have a log2FC; 12,900–14,600 per contrast have a padj (DESeq2 independent filtering).
+  The CDF population is set later by the 5 % / 10 % expression filter, not by padj availability.
+- Significant (padj < 0.05): siPARP1-A 6,029; siPARP1-B 3,936; siPARP2-A 5,431; siPARP2-B 7,806.
+- Knockdown (log2FC of the target): siPARP1-A −6.52, siPARP1-B −5.69 (PARP1); siPARP2-A
+  −3.05, siPARP2-B −4.16 (PARP2). Re-run on 2026-11-24 reproduced the 2026-11-18 results
+  exactly (identical log2FC).
 
 ### processed/: known invalid outputs
 Built before two errors were found. Do not use; regenerate from the corrected NB3.
