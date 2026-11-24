@@ -90,6 +90,7 @@ Made by `notebooks/GSE114273/03_differential_expression.ipynb`.
 |---|---|
 | `GSE114273_<siRNA>_DGE_results.tsv` (×4) | 19,227 protein-coding genes × 6, index `EnsemblGeneID`: `baseMean`, `log2FoldChange`, `lfcSE`, `stat`, `pvalue`, `padj`. log2FC = siRNA / siNC (negative = lower after treatment). Load with `index_col=0`. |
 | `GSE114273_on_target_DGE.tsv` | PARP1 and PARP2 rows from each contrast, with % remaining expression. |
+| `GSE114273_counts_norm.tsv` | 19,227 genes × 10 samples, index `EnsemblGeneID`: DESeq2-normalised counts (raw counts / size factors, from `dds.layers["normed_counts"]`). Used for the siNC expression filter in NB 04 (main: siNC mean ≥ 10). |
 
 - **Input:** GEO raw counts, the 10 siRNA samples, restricted to protein-coding genes with an
   Ensembl ID via `GSE114273_gene_mapping_protein_coding.tsv` (from NB 01).
