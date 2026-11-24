@@ -74,7 +74,14 @@ Normalized expression → log2FC → seed-positive vs seed-negative → CDF plot
 Raw gene-level counts → DESeq2 with the correct design (paired if samples are paired) → expression filtering → log2FC → map to human 3'UTRs → seed status → CDF + rank-sum test.
 
 ### Expression filters
-Replicate-detection thresholds assumed n=3 and do not transfer to GSE114273 (n=2). Current approach: exclude the lowest-expressed 5 % and 10 % of genes, inspect both, and agree the threshold with me before using it downstream. Always re-run the final analysis across both as a sensitivity check, and document the exact threshold used.
+Filter on expression in the **negative control (siNC) only**: mean DESeq2-normalised count of the siNC samples. Never filter on treated samples, because low counts there can be the repression being tested (selection on the outcome).
+
+- **Main:** siNC mean ≥ 10 normalised counts (≈ 0.5 CPM; the DESeq2 and edgeR `filterByExpr` default). All figures and conclusions use this.
+- **Sensitivity (one, pre-declared):** remove the lowest 10 % of siNC means (in GSE114273 this removes only genes with 0 reads in siNC). Report as one short table of effect sizes: does the conclusion change?
+- The same filtered gene set is used for all siRNA contrasts (needed for the specificity control).
+- Percentile filters on all genes (5 % / 10 %) were dropped: in GSE114273 they cut below 1 read and left ~3,900 genes with < 10 reads, whose log2FC is 2–3× noisier.
+
+Reasoning and numbers: `docs/methodology.md`, "Expression filter for the seed analysis". Any change to these thresholds must be agreed with me first.
 
 ### Seed definitions
 
