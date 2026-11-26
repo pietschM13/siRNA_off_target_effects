@@ -111,17 +111,30 @@ Made by `notebooks/GSE114273/03_differential_expression.ipynb`.
   −3.05, siPARP2-B −4.16 (PARP2). Re-run on 2026-11-24 reproduced the 2026-11-18 results
   exactly (identical log2FC).
 
-### processed/: known invalid outputs
-Built before two errors were found. Do not use; regenerate from the corrected NB3.
+### processed/: seed analysis (2026-11-26)
+Made by `notebooks/GSE114273/04_off_target_analysis.ipynb`.
+
+| File | Contents |
+|---|---|
+| `GSE114273_seed_dge_gene.tsv` | 16,638 genes × 11, index `EnsemblGeneID`: `siNC_mean` (mean normalised count in siNC), `in_main` (siNC mean ≥ 10; 12,009 genes), `in_sensitivity` (lowest 10 % of siNC removed; 14,591), and per siRNA `<siRNA>_log2FoldChange` + `<siRNA>_best_site`. Load with `index_col=0`; select a gene set with `df[df["in_main"]]`. |
+
+- Population = genes with a DESeq2 log2FC **and** a 3'UTR record in `seed_gene`; genes
+  without a UTR are dropped, not counted as seed-negative.
+- Result tables (`seed_stats`, specificity matrices, UTR-adjusted regression) and figures are
+  in `results/GSE114273/` (tables tracked by git, figures not).
+
+### Deleted invalid outputs (2026-11-26)
+Built before two errors were found, and deleted once the corrected analysis existed:
 1. **8-mer bug:** old NB3 built the 8mer as `'A' + 7mer` (A prepended, not appended),
    giving `ATTCATGA`, `AGTGTGAT`, `ATTGACAA`, `ATTCAGCT`.
 2. **siPARP1-B typo:** deposited sense `…GUGUGAUA` has its last two nt swapped; corrected
    to `…GUGUGAAU` (19/19 match to PARP1 NM_001618.4 3086–3104). Changes the seed from
    AUCACA to UUCACA. Details in `config/GSE114273.yaml`.
 
-| File | Affected by |
-|---|---|
-| `GSE114273_expression_data_8mer_A1_annotated.tsv` | 1 and 2 |
-| `GSE114273_siPARP*_seed_analysis_input.tsv` (×4) | Built with the wrong seeds; will be overwritten by the corrected analysis |
+| Deleted file | Affected by | Replaced by |
+|---|---|---|
+| `processed/GSE114273_expression_data_8mer_A1_annotated.tsv` | 1 and 2 | `GSE114273_seed_gene.tsv` (NB 02) |
+| `processed/GSE114273_siPARP*_seed_analysis_input.tsv` (×4) | 1 and 2 | `GSE114273_seed_dge_gene.tsv` (NB 04) |
+| `results/GSE114273/figures/GSE114273_CDF_baseline.png`, `…_CDF_filtered.png` | 1 and 2 | new CDF figure from NB 04 |
 
 Not affected by sequence errors: DGE results, expression, knockdown and on-target files.
