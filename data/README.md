@@ -65,6 +65,19 @@ annotation were protein-coding rather than non-coding or another biotype. Not us
 | `All_genes_GSE114273.csv` | GTO GTD0019 "All genes" table (downloaded 2026-11-24). 13,677 genes. **siPARP1-A + B pooled** (GSM3138709–12) vs siNC (GSM3138707–08). Gene symbols only; values rounded to 3 decimals; DE method and gene filter not documented by GTO. Not used for the main analysis (pooling dilutes each seed); kept for a later cross-check notebook. |
 | `Differential_genes_GSE114273.csv` | GTO GTD0019 "Differential genes": the 998 genes of the table above with padj < 0.05 (no log2FC cut-off). Never use for a CDF (pre-selected on significance). |
 
+### processed/: gene annotation (NB 01, rebuilt 2026-11-27)
+Made by `notebooks/GSE114273/01_data_and_on_target.ipynb` from `Human.GRCh38.p13.annot.tsv`.
+
+| File | Contents |
+|---|---|
+| `GSE114273_gene_mapping_protein_coding.tsv` | 19,227 genes × 5: `GeneID`, `EnsemblGeneID`, `Symbol`, `GeneType`, `Description`. Input for NB 03. |
+
+- 19,416 protein-coding genes → 178 without Ensembl ID dropped → 19,238.
+- **Rule for Ensembl IDs shared by two NCBI genes**, in order: drop `readthrough` entries
+  (10), then uncharacterised `LOC` entries (1: LOC102723728 vs NOMO2); any duplicate left
+  stops the notebook with an error. Result identical to the earlier hand-curated file.
+- The on-target knockdown table (TPM) is written to `results/GSE114273/tables/`.
+
 ### processed/: seed annotation (2026-11-23)
 Made by `notebooks/GSE114273/02_sequence_analysis.ipynb` with the functions in
 `src/offtarget/sequences.py`. Built from all human 3'UTRs, **not** filtered to expressed
@@ -138,3 +151,10 @@ Built before two errors were found, and deleted once the corrected analysis exis
 | `results/GSE114273/figures/GSE114273_CDF_baseline.png`, `…_CDF_filtered.png` | 1 and 2 | new CDF figure from NB 04 |
 
 Not affected by sequence errors: DGE results, expression, knockdown and on-target files.
+
+### Deleted obsolete outputs (2026-11-27)
+Outputs of the old notebooks 01/01b and the old seed analysis that nothing uses any more,
+deleted when NB 01 was merged: `GSE114273_expression_data.tsv`,
+`GSE114273_expressed_genes_3UTR_mapped.tsv` (also carried the old siJARID2 `has_8mer`
+column), `GSE114273_mapped_raw_merged.tsv`, `GSE114273_knockdown_summary.tsv`,
+`GSE114273_on_target_statistics.tsv` (t-tests on n = 2, dropped), `GSE114273_target_expression.tsv`.
