@@ -133,8 +133,11 @@ Made by `notebooks/GSE114273/04_off_target_analysis.ipynb`.
 
 - Population = genes with a DESeq2 log2FC **and** a 3'UTR record in `seed_gene`; genes
   without a UTR are dropped, not counted as seed-negative.
-- Result tables (`seed_stats`, specificity matrices, UTR-adjusted regression) and figures are
-  in `results/GSE114273/` (tables tracked by git, figures not).
+- Result tables (`seed_stats`, specificity matrices, UTR-adjusted regression, candidate
+  off-targets and their enrichment) and figures (CDF, specificity heatmap, candidate volcano)
+  are in `results/GSE114273/` (tables tracked by git, figures not).
+- Candidate off-targets: padj < 0.05 and log2FC < −1 with an 8mer/7mer for that siRNA;
+  `down_with_sibling` flags genes also strongly down with the other siRNA against the same target.
 
 ### Deleted invalid outputs (2026-11-26)
 Built before two errors were found, and deleted once the corrected analysis existed:
