@@ -236,6 +236,68 @@ exactly the undetected genes.
 
 ---
 
+## At least one site vs single site: which question each answers
+
+> **Context (2026-11-27, after notebook 04 and reading Agarwal et al. 2015, eLife, Fig. 1):**
+> seed-positive fractions looked high compared with the paper, which counts only genes with a
+> single site. That raised the question of what our site groups actually measure. Outcome: the
+> main analysis stays "at least one site, grouped by best site"; the site-type gradient is
+> supported with single-site numbers (checked outside the notebook, not added to NB 04).
+
+### What our groups are
+Genes are grouped by `best_site` with any number of sites. The "8mer group" means genes whose
+**strongest** site is an 8mer; they may carry further 8mers, 7mers or 6mers. So the Δ median per
+group is not pure per-site efficacy: it includes what the extra sites add.
+
+### Two questions, two versions
+| Question | Version | Use |
+|---|---|---|
+| Q1: are an siRNA's seed-matched genes, as a population, repressed? | At least one site, by best site | Main claim (project purpose: a downregulatory tendency across a population) |
+| Q2: how effective is ONE site of each type (8mer > 7mer > 6mer)? | Single site only (exactly one site position of any type) | Site-type gradient (per-site efficacy, the paper's design) |
+
+- **For Q1 "at least one" is better:** more power, and off-target exposure is cumulative, so a gene
+  with three sites is a more plausible off-target, not a less clean one. Candidate lists rely on it.
+- **For Q2 single site is the right tool:** it isolates one site, at the cost of fewer genes and
+  dropping the most-targeted genes.
+- Extra sites add, but by type, and weak sites (6mers) are the common ones, so most extra sites add
+  little. Hence little change for siPARP1-A / siPARP2-A and a larger one for siPARP2-B (more 7mer-m8 genes).
+
+### GSE114273 numbers (main gene set, siNC ≥ 10)
+Δ median log2FC vs no-site genes, 8mer group:
+
+| | At least one site | Single site (n) |
+|---|---|---|
+| siPARP1-A | −0.247 | −0.234 (328) |
+| siPARP1-B | −0.032 | −0.032 (193) |
+| siPARP2-A | −0.167 | −0.167 (308) |
+| siPARP2-B | −0.247 | −0.179 (150) |
+
+The 8mer > 7mer > 6mer order holds in the single-site version for the three active siRNAs
+(e.g. siPARP1-A: −0.234 / −0.131 / −0.110 / −0.031).
+
+Dose-response, all seed-positive genes by number of site positions (any type):
+
+| | 1 site | 2 sites | ≥ 3 sites |
+|---|---|---|---|
+| siPARP1-A | −0.083 | −0.121 | −0.162 |
+| siPARP1-B | 0.002 | −0.016 | −0.012 |
+| siPARP2-A | −0.068 | −0.097 | −0.105 |
+| siPARP2-B | −0.075 | −0.150 | −0.154 |
+
+Caveat: more sites go with longer UTRs, so the dose-response alone could partly reflect UTR length;
+together with the specificity matrix and the UTR-length regression it fits a seed effect.
+
+Frequencies counted the paper's way (single-site + no-site genes only): 8mer 1.6–3.3 %, 6mer
+13.5–21.2 %, no site 63–71 %, vs the paper's HeLa aggregate 1.4 % / 8.6 % / 83 %. The remaining
+~1.5–2× is explained by longer UTRs (longest isoform), AU-rich seeds and cell type.
+
+### Framing
+1. Main result (Q1): at least one site, by best site.
+2. Site-type gradient (Q2): stated with the single-site numbers as support.
+3. Site number: dose-response as a supporting observation, with the UTR-length caveat.
+
+---
+
 ## Possible extensions (not implemented)
 
 > **Context (2026-11-24, after the PCA in notebook 03):** the PCA showed each siRNA has its
